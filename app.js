@@ -37,18 +37,49 @@ document.querySelector(".btn-roll").addEventListener("click", function () {
   } else {
     // ==1 2'nd player's turn
     // change the current player's score to 0;
-    roundScore = 0;
-    document.getElementById("current-" + activePlayer).textContent = 0;
-
     // If activePlayer is 0, make it 1;
     // if not, make it 0;
-    activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
-
-    // change the red dot to activeplayer
-    document.querySelector(".player-0-panel").classList.toggle("active");
-    diceDom.style.display = "none";
-    document.querySelector(".player-1-panel").classList.toggle("active");
-
-
+    switchToNextPlayer();
   }
 });
+
+// hold button eventListener
+document.querySelector(".btn-hold").addEventListener("click", function () {
+  // The current player collected points to add global points.
+
+  scores[activePlayer] = scores[activePlayer] + roundScore;
+
+  document.getElementById("score-" + activePlayer).textContent =
+    scores[activePlayer];
+  // check the either player win or not
+  if (scores[activePlayer] >= 100) {
+    document.getElementById("name-" + activePlayer).textContent = "WINNER!!!";
+    document
+      .querySelector(".player-" + activePlayer + "-panel")
+      .classList.add("winner");
+      document
+      .querySelector(".player-" + activePlayer + "-panel")
+      .classList.remove("active");
+  } else {
+    // Change the score
+    // will turn to next player
+    switchToNextPlayer();
+  }
+});
+
+function switchToNextPlayer() {
+  roundScore = 0;
+  document.getElementById("current-" + activePlayer).textContent = "0";
+  activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
+  // change the red dot to activeplayer
+  document.querySelector(".player-0-panel").classList.toggle("active");
+
+  document.querySelector(".player-1-panel").classList.toggle("active");
+  diceDom.style.display = "none";
+}
+
+
+// new game button event listener
+document.querySelector('.btn-new').addEventListener('click', function(){
+  
+})
