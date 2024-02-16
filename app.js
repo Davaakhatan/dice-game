@@ -1,4 +1,7 @@
 //Global variables
+// Var for check either game is over or not.
+var isNewGame;
+// Players var
 var activePlayer;
 // two players collected scores
 var scores;
@@ -11,6 +14,7 @@ initGame();
 // When game start
 function initGame() {
   // create a var for player turn, first playar 0, second player 1.
+  isNewGame = true;
   activePlayer = 0;
   // create a var for collected points of player
   scores = [0, 0];
@@ -23,8 +27,8 @@ function initGame() {
   document.getElementById("current-0").textContent = 0;
   document.getElementById("current-1").textContent = 0;
   // Player's name back to default
-  document.getElementById('name-0').textContent = 'Player 1';
-  document.getElementById('name-1').textContent = 'Player 2';
+  document.getElementById("name-0").textContent = "Player 1";
+  document.getElementById("name-1").textContent = "Player 2";
   document.querySelector(".player-0-panel").classList.remove("winner");
   document.querySelector(".player-1-panel").classList.remove("winner");
 
@@ -37,25 +41,30 @@ function initGame() {
 
 // Roll Dice event Listener
 document.querySelector(".btn-roll").addEventListener("click", function () {
-  // between 1 to 6 random dice number
-  var diceNumber = Math.floor(Math.random() * 6) + 1;
-  // display dice picture
-  diceDom.style.display = "block";
+  if (isNewGame) {
+    // between 1 to 6 random dice number
+    var diceNumber = Math.floor(Math.random() * 6) + 1;
+    // display dice picture
+    diceDom.style.display = "block";
 
-  // display the corresponding dice picture
-  diceDom.src = "dice-" + diceNumber + ".png";
+    // display the corresponding dice picture
+    diceDom.src = "dice-" + diceNumber + ".png";
 
-  // if the number is 1 < Change the current player's score
-  if (diceNumber !== 1) {
-    // it's higher than 1 so, add the player's current number corresponding dice number
-    roundScore = roundScore + diceNumber;
-    document.getElementById("current-" + activePlayer).textContent = roundScore;
+    // if the number is 1 < Change the current player's score
+    if (diceNumber !== 1) {
+      // it's higher than 1 so, add the player's current number corresponding dice number
+      roundScore = roundScore + diceNumber;
+      document.getElementById("current-" + activePlayer).textContent =
+        roundScore;
+    } else {
+      // ==1 2'nd player's turn
+      // change the current player's score to 0;
+      // If activePlayer is 0, make it 1;
+      // if not, make it 0;
+      switchToNextPlayer();
+    }
   } else {
-    // ==1 2'nd player's turn
-    // change the current player's score to 0;
-    // If activePlayer is 0, make it 1;
-    // if not, make it 0;
-    switchToNextPlayer();
+    alert("Game is over, Please click New Game button.");
   }
 });
 
@@ -63,23 +72,29 @@ document.querySelector(".btn-roll").addEventListener("click", function () {
 document.querySelector(".btn-hold").addEventListener("click", function () {
   // The current player collected points to add global points.
 
-  scores[activePlayer] = scores[activePlayer] + roundScore;
+  if (isNewGame) {
+    scores[activePlayer] = scores[activePlayer] + roundScore;
 
-  document.getElementById("score-" + activePlayer).textContent =
-    scores[activePlayer];
-  // check the either player win or not
-  if (scores[activePlayer] >= 10) {
-    document.getElementById("name-" + activePlayer).textContent = "WINNER!!!";
-    document
-      .querySelector(".player-" + activePlayer + "-panel")
-      .classList.add("winner");
-    document
-      .querySelector(".player-" + activePlayer + "-panel")
-      .classList.remove("active");
+    document.getElementById("score-" + activePlayer).textContent =
+      scores[activePlayer];
+    // check the either player win or not
+    if (scores[activePlayer] >= 100) {
+      // make it game over
+      isNewGame = false;
+      document.getElementById("name-" + activePlayer).textContent = "WINNER!!!";
+      document
+        .querySelector(".player-" + activePlayer + "-panel")
+        .classList.add("winner");
+      document
+        .querySelector(".player-" + activePlayer + "-panel")
+        .classList.remove("active");
+    } else {
+      // Change the score
+      // will turn to next player
+      switchToNextPlayer();
+    }
   } else {
-    // Change the score
-    // will turn to next player
-    switchToNextPlayer();
+    alert("Game is over, Please click New Game button.");
   }
 });
 
